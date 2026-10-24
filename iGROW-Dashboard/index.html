@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iGROW Farmer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="logo">🌱 iGROW</div>
+        <nav>
+            <a href="#" class="active">🏠 Dashboard</a>
+            <a href="#">🌱 My Crops</a>
+            <a href="#">📊 Yield</a>
+            <a href="#">💰 Finance</a>
+            <a href="#">📈 Market</a>
+            <a href="#">🤖 AI Assistant</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div>
+                <h1>Farmer Dashboard</h1>
+                <p>Welcome back! Here's your farm overview.</p>
+            </div>
+            <div class="farmer">
+                <span>👤 Farmer</span>
+                <button type="button" class="logout-btn" id="logoutButton">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <section class="cards">
+            <div class="card">
+                <h3>💰 Revenue</h3>
+                <h2>₹85,000</h2>
+                <p>Total Revenue</p>
+            </div>
+            <div class="card">
+                <h3>💸 Expenses</h3>
+                <h2>₹32,000</h2>
+                <p>Total Expenses</p>
+            </div>
+            <div class="card">
+                <h3>📈 Net Profit</h3>
+                <h2>₹53,000</h2>
+                <p>Current Profit</p>
+            </div>
+            <div class="card">
+                <h3>🌱 Active Crops</h3>
+                <h2>4</h2>
+                <p>Crops Growing</p>
+            </div>
+        </section>
+
+        <section class="farm-status">
+            <div class="status-title">
+                <h2>🌱 Farm Status</h2>
+                <span>Live Overview</span>
+            </div>
+            <div class="status-items">
+                <div class="status-item">
+                    <span class="status-icon">🌡️</span>
+                    <div>
+                        <p>Temperature</p>
+                        <h3>24°C</h3>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">💧</span>
+                    <div>
+                        <p>Humidity</p>
+                        <h3>68%</h3>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">💦</span>
+                    <div>
+                        <p>Water Status</p>
+                        <h3>Good</h3>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🌱</span>
+                    <div>
+                        <p>Active Crops</p>
+                        <h3>4 Crops</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-card" id="crop-recommendation">
+            <h2>🤖 AI Crop Recommendation</h2>
+            <p>Enter your farm conditions to get a recommendation from the trained ML model.</p>
+
+            <form id="cropForm">
+                <div class="recommendation-grid">
+                    <label>Temperature (°C)
+                        <input type="number" name="temperature" step="any" value="28" required>
+                    </label>
+                    <label>Humidity (%)
+                        <input type="number" name="humidity" min="0" max="100" step="any" value="65" required>
+                    </label>
+                    <label>Soil pH
+                        <input type="number" name="ph" min="0" max="14" step="any" value="6.5" required>
+                    </label>
+                    <label>Soil EC
+                        <input type="number" name="ec" step="any" value="1.2" required>
+                    </label>
+                    <label>Light hours per day
+                        <input type="number" name="light_hours" min="0" max="24" step="any" value="8" required>
+                    </label>
+                    <label>Water availability
+                        <select name="water" required>
+                            <option value="high">High</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </label>
+                    <label>Season
+                        <select name="season" required>
+                            <option value="cool">Cool</option>
+                            <option value="warm" selected>Warm</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button type="submit" id="recommendButton">Recommend Crop</button>
+                <p id="cropMessage" role="status" aria-live="polite"></p>
+                <div id="cropResult" hidden>
+                    <h3>Recommended crop</h3>
+                    <p id="recommendedCrop"></p>
+                </div>
+            </form>
+        </section>
+
+        <section class="chart-grid">
+            <div class="chart-card">
+                <h2>Profit &amp; Loss</h2>
+                <canvas id="profitChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Coriander Growth</h2>
+                <select id="cropSelect">
+                    <option value="coriander" selected>Coriander</option>
+                    <option value="lettuce">Lettuce</option>
+                    <option value="spinach">Spinach</option>
+                </select>
+                <canvas id="growthChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Crop Yield</h2>
+                <canvas id="yieldChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Market Pricing</h2>
+                <select id="marketCrop">
+                    <option selected>Coriander</option>
+                    <option>Lettuce</option>
+                    <option>Spinach</option>
+                </select>
+                <canvas id="marketChart"></canvas>
+            </div>
+        </section>
+
+        <!-- CORIANDER PRICE PREDICTION -->
+        <section class="price-prediction card">
+            <h2>🌿 AI Coriander Price Prediction</h2>
+            <p>Enter recent coriander prices and weather conditions to predict the price per quintal.</p>
+
+            <form id="priceForm">
+                <h3>Previous 7 Days' Prices (₹ per quintal)</h3>
+                <div class="price-input-grid">
+                    <label>1 day ago
+                        <input type="number" name="price_lag_1" min="0" step="any" required>
+                    </label>
+                    <label>2 days ago
+                        <input type="number" name="price_lag_2" min="0" step="any" required>
+                    </label>
+                    <label>3 days ago
+                        <input type="number" name="price_lag_3" min="0" step="any" required>
+                    </label>
+                    <label>4 days ago
+                        <input type="number" name="price_lag_4" min="0" step="any" required>
+                    </label>
+                    <label>5 days ago
+                        <input type="number" name="price_lag_5" min="0" step="any" required>
+                    </label>
+                    <label>6 days ago
+                        <input type="number" name="price_lag_6" min="0" step="any" required>
+                    </label>
+                    <label>7 days ago
+                        <input type="number" name="price_lag_7" min="0" step="any" required>
+                    </label>
+                </div>
+
+                <h3>Weather Conditions</h3>
+                <div class="price-input-grid">
+                    <label>Temperature (°C)
+                        <input type="number" name="temperature" step="any" required>
+                    </label>
+                    <label>Humidity (%)
+                        <input type="number" name="humidity" min="0" max="100" step="any" required>
+                    </label>
+                    <label>Rainfall (mm)
+                        <input type="number" name="rainfall" min="0" step="any" required>
+                    </label>
+                    <label>Prediction Date
+                        <input type="date" name="date" id="priceDate" required>
+                    </label>
+                </div>
+
+                <button type="submit" id="pricePredictButton">
+                    Predict Coriander Price
+                </button>
+
+                <p id="priceMessage" role="status" aria-live="polite"></p>
+
+                <div id="priceResult" hidden aria-live="polite">
+                    <h3>Predicted Coriander Price</h3>
+                    <p id="predictedPrice"></p>
+                    <small id="priceResultDate"></small>
+                </div>
+            </form>
+        </section>
+
+        <section class="table-card">
+            <h2>🌱 My Crops</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Crop</th>
+                        <th>Planted Date</th>
+                        <th>Growth</th>
+                        <th>Expected Harvest</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🌿 Coriander</td>
+                        <td>10 Aug 2026</td>
+                        <td>75%</td>
+                        <td>25 Sep 2026</td>
+                    </tr>
+                    <tr>
+                        <td>🥬 Lettuce</td>
+                        <td>18 Aug 2026</td>
+                        <td>85%</td>
+                        <td>20 Sep 2026</td>
+                    </tr>
+                    <tr>
+                        <td>🌿 Spinach</td>
+                        <td>20 Aug 2026</td>
+                        <td>90%</td>
+                        <td>15 Sep 2026</td>
+                    </tr>
+                    <tr>
+                        <td>🥒 Cucumber</td>
+                        <td>12 Aug 2026</td>
+                        <td>65%</td>
+                        <td>30 Sep 2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
